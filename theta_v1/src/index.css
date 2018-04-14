@@ -28,7 +28,7 @@ body {
 
 .menu{
     height: auto;
-    width: 70%;
+    width: 65%;
     float: left;
 }
 
@@ -38,5 +38,5 @@ body {
     width: 30%;
     height: auto;
     right: 40px;
-    background-color: skyblue;
+    padding: 20px;
 }

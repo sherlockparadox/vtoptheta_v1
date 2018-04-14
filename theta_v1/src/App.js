@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
+import VerticalLinearStepper from './components/stepper_timetable'
+import SimpleTabs from './components/tabs_menu'
 
 class App extends Component {
   render() {
@@ -12,9 +14,11 @@ class App extends Component {
         </div>
         
         <div className="menu">
+            <SimpleTabs />
         </div>
         
         <div className="right-box">
+            <VerticalLinearStepper />
         </div>
       </div>
     );

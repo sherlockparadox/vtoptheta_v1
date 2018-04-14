@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Stepper, { Step, StepButton } from 'material-ui/Stepper';
+import Stepper, { Step, StepLabel, StepContent } from 'material-ui/Stepper';
 import Button from 'material-ui/Button';
+import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
@@ -10,17 +11,14 @@ const styles = theme => ({
     width: '90%',
   },
   button: {
-    marginRight: theme.spacing.unit,
-  },
-  backButton: {
-    marginRight: theme.spacing.unit,
-  },
-  completed: {
-    display: 'inline-block',
-  },
-  instructions: {
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+  actionsContainer: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  resetContainer: {
+    padding: theme.spacing.unit * 3,
   },
 });
 
@@ -31,83 +29,29 @@ function getSteps() {
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return 'Step 1: Select campaign settings...';
+      return `For each ad campaign that you create, you can control how much
+              you're willing to spend on clicks and conversions, which networks
+              and geographical locations you want your ads to show on, and more.`;
     case 1:
-      return 'Step 2: What is an ad group anyways?';
+      return 'An ad group contains one or more ads which target a shared set of keywords.';
     case 2:
-      return 'Step 3: This is the bit I really care about!';
+      return `Try out different ad text to see what brings in the most customers,
+              and learn how to enhance your ads using features like ad extensions.
+              If you run into any problems with your ads, find out how to tell if
+              they're running and how to resolve approval issues.`;
     default:
       return 'Unknown step';
   }
 }
 
-class HorizontalNonLinearAlternativeLabelStepper extends React.Component {
+class VerticalLinearStepper extends React.Component {
   state = {
     activeStep: 0,
-    completed: new Set(),
-    skipped: new Set(),
   };
-
-  totalSteps = () => {
-    return getSteps().length;
-  };
-
-  isStepComplete(step) {
-    return this.state.completed.has(step);
-  }
-
-  completedSteps() {
-    return this.state.completed.size;
-  }
-
-  allStepsCompleted() {
-    return this.completedSteps() === this.totalSteps() - this.skippedSteps();
-  }
-
-  isLastStep() {
-    return this.state.activeStep === this.totalSteps() - 1;
-  }
-
-  isStepOptional = step => {
-    return step === 1;
-  };
-
-  isStepSkipped(step) {
-    return this.state.skipped.has(step);
-  }
-
-  handleSkip = () => {
-    const { activeStep } = this.state;
-    if (!this.isStepOptional(activeStep)) {
-      // You probably want to guard against something like this
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-    const skipped = new Set(this.state.skipped);
-    skipped.add(activeStep);
-    this.setState({
-      activeStep: this.state.activeStep + 1,
-      skipped,
-    });
-  };
-
-  skippedSteps() {
-    return this.state.skipped.size;
-  }
 
   handleNext = () => {
-    let activeStep;
-
-    if (this.isLastStep() && !this.allStepsCompleted()) {
-      // It's the last step, but not all steps have been completed
-      // find the first step that has been completed
-      const steps = getSteps();
-      activeStep = steps.findIndex((step, i) => !this.state.completed.has(i));
-    } else {
-      activeStep = this.state.activeStep + 1;
-    }
     this.setState({
-      activeStep,
+      activeStep: this.state.activeStep + 1,
     });
   };
 
@@ -117,33 +61,9 @@ class HorizontalNonLinearAlternativeLabelStepper extends React.Component {
     });
   };
 
-  handleStep = step => () => {
-    this.setState({
-      activeStep: step,
-    });
-  };
-
-  handleComplete = () => {
-    const completed = new Set(this.state.completed);
-    completed.add(this.state.activeStep);
-    this.setState({
-      completed,
-    });
-    /**
-     * Sigh... it would be much nicer to replace the following if conditional with
-     * `if (!this.allStepsComplete())` however state is not set when we do this,
-     * thus we have to resort to not being very DRY.
-     */
-    if (completed.size !== this.totalSteps() - this.skippedSteps()) {
-      this.handleNext();
-    }
-  };
-
   handleReset = () => {
     this.setState({
       activeStep: 0,
-      completed: new Set(),
-      skipped: new Set(),
     });
   };
 
@@ -154,88 +74,52 @@ class HorizontalNonLinearAlternativeLabelStepper extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Stepper alternativeLabel nonLinear activeStep={activeStep}>
+        <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => {
-            const props = {};
-            const buttonProps = {};
-            if (this.isStepOptional(index)) {
-              buttonProps.optional = <Typography variant="caption">Optional</Typography>;
-            }
-            if (this.isStepSkipped(index)) {
-              props.completed = false;
-            }
             return (
-              <Step key={label} {...props}>
-                <StepButton
-                  onClick={this.handleStep(index)}
-                  completed={this.isStepComplete(index)}
-                  {...buttonProps}
-                >
-                  {label}
-                </StepButton>
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+                <StepContent>
+                  <Typography>{getStepContent(index)}</Typography>
+                  <div className={classes.actionsContainer}>
+                    <div>
+                      <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        variant="raised"
+                        color="primary"
+                        onClick={this.handleNext}
+                        className={classes.button}
+                      >
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                      </Button>
+                    </div>
+                  </div>
+                </StepContent>
               </Step>
             );
           })}
         </Stepper>
-        <div>
-          {this.allStepsCompleted() ? (
-            <div>
-              <Typography className={classes.instructions}>
-                All steps completed - you&quot;re finished
-              </Typography>
-              <Button onClick={this.handleReset}>Reset</Button>
-            </div>
-          ) : (
-            <div>
-              <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={this.handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={this.handleNext}
-                  className={classes.button}
-                >
-                  Next
-                </Button>
-                {this.isStepOptional(activeStep) &&
-                  !this.state.completed.has(this.state.activeStep) && (
-                    <Button
-                      variant="raised"
-                      color="primary"
-                      onClick={this.handleSkip}
-                      className={classes.button}
-                    >
-                      Skip
-                    </Button>
-                  )}
-                {activeStep !== steps.length &&
-                  (this.state.completed.has(this.state.activeStep) ? (
-                    <Typography variant="caption" className={classes.completed}>
-                      Step {activeStep + 1} already completed
-                    </Typography>
-                  ) : (
-                    <Button variant="raised" color="primary" onClick={this.handleComplete}>
-                      {this.completedSteps() === this.totalSteps() - 1 ? 'Finish' : 'Complete Step'}
-                    </Button>
-                  ))}
-              </div>
-            </div>
-          )}
-        </div>
+        {activeStep === steps.length && (
+          <Paper square elevation={0} className={classes.resetContainer}>
+            <Typography>All steps completed - you&quot;re finished</Typography>
+            <Button onClick={this.handleReset} className={classes.button}>
+              Reset
+            </Button>
+          </Paper>
+        )}
       </div>
     );
   }
 }
 
-HorizontalNonLinearAlternativeLabelStepper.propTypes = {
+VerticalLinearStepper.propTypes = {
   classes: PropTypes.object,
 };
 
-export default withStyles(styles)(HorizontalNonLinearAlternativeLabelStepper);
+export default withStyles(styles)(VerticalLinearStepper);
