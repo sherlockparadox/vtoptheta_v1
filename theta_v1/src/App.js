@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import './App.css';
 import VerticalLinearStepper from './components/stepper_timetable'
 import SimpleTabs from './components/tabs_menu'
+import SimpleMenu from './components/button'
 
 class App extends Component {
   render() {
     return (
       <div className="Wrapper01">
+        
+        <SimpleMenu />
         
         <div className="Premium">
             <div className="search_size">

@@ -5,6 +5,8 @@ import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 
+//import AutoGrid from 'grid';
+
 function TabContainer(props) {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -23,6 +25,7 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     backgroundColor: theme.palette.background.paper,
   },
+    
 });
 
 class SimpleTabs extends React.Component {
