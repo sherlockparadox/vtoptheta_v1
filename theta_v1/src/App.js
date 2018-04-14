@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import VerticalLinearStepper from './components/stepper_timetable'
 import SimpleTabs from './components/tabs_menu'
-import SimpleMenu from './components/button'
+import SimpleMenu from './components/logout'
 import IntegrationReactSelect from './components/autocomplete_search'
 
 class App extends Component {

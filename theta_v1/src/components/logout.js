@@ -26,8 +26,9 @@ class SimpleMenu extends React.Component {
           aria-haspopup="true"
           onClick={this.handleClick}
           color="secondary"
+          style={{marginLeft: '90%', marginBottom: '2%'}}
         >
-          Open Menu
+          Logout
         </Button>
         <Menu
           id="simple-menu"
