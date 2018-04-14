@@ -86,10 +86,10 @@ function SelectWrapped(props) {
     <Select
       optionComponent={Option}
       noResultsText={<Typography>{'No results found'}</Typography>}
+      clearRenderer={() => <ClearIcon />}
       arrowRenderer={arrowProps => {
         return arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
       }}
-      clearRenderer={() => <ClearIcon />}
       valueComponent={valueProps => {
         const { value, children, onRemove } = valueProps;
 
@@ -245,13 +245,14 @@ class IntegrationReactSelect extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
+      <div className={classes.root} style={{marginLeft: '20%',}}>
         <Input
-          fullWidth
+          //fullWidth
+          style={{width: '80%',}}
           inputComponent={SelectWrapped}
           value={this.state.single}
           onChange={this.handleChange('single')}
-          placeholder="Search a country (start with a)"
+          placeholder="Search"
           id="react-select-single"
           inputProps={{
             classes,
@@ -259,44 +260,6 @@ class IntegrationReactSelect extends React.Component {
             instanceId: 'react-select-single',
             simpleValue: true,
             options: suggestions,
-          }}
-        />
-        <Input
-          fullWidth
-          inputComponent={SelectWrapped}
-          value={this.state.multi}
-          onChange={this.handleChange('multi')}
-          placeholder="Select multiple countries"
-          name="react-select-chip"
-          inputProps={{
-            classes,
-            multi: true,
-            instanceId: 'react-select-chip',
-            id: 'react-select-chip',
-            simpleValue: true,
-            options: suggestions,
-          }}
-        />
-        <TextField
-          fullWidth
-          value={this.state.multiLabel}
-          onChange={this.handleChange('multiLabel')}
-          placeholder="Select multiple countries"
-          name="react-select-chip-label"
-          label="With label"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          InputProps={{
-            inputComponent: SelectWrapped,
-            inputProps: {
-              classes,
-              multi: true,
-              instanceId: 'react-select-chip-label',
-              id: 'react-select-chip-label',
-              simpleValue: true,
-              options: suggestions,
-            },
           }}
         />
       </div>
