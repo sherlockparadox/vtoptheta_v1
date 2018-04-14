@@ -245,14 +245,14 @@ class IntegrationReactSelect extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root} style={{marginLeft: '35%',}}>
+      <div className={classes.root} style={{marginLeft: '20%',}}>
         <Input
           //fullWidth
-          style={{width: '50%',}}
+          style={{width: '80%',}}
           inputComponent={SelectWrapped}
           value={this.state.single}
           onChange={this.handleChange('single')}
-          placeholder="Search a country (start with a)"
+          placeholder="Search"
           id="react-select-single"
           inputProps={{
             classes,
